@@ -17,7 +17,7 @@ public class Main {
 
         kia.addModel("K900", 11111.1);
 
-        Motorcycle suzuki = new Motorcycle("SUZUKI", 5);
+        Motorcycle suzuki = new Motorcycle("SUZUKI", 0);
         suzuki.addModel("GSX750", 1500.0);
         System.out.println(kia);
         System.out.println(suzuki);

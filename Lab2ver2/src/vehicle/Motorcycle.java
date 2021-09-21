@@ -99,17 +99,20 @@ public class Motorcycle implements Vehicle {
         if (countOfModels != 0) {
             while (!model.name.equals(name)) {
                 model = model.next;
-                if (model.equals(head))
-                    throw new NoSuchModelNameException();
+                if (model.equals(head)) {
+                    throw new NoSuchModelNameException(name);
+                }
             }
-        } else throw new NoSuchModelNameException();
+        } else throw new NoSuchModelNameException(name);
         return model;
     }
 
     private void checkForDuplicateName(String name) throws DuplicateModelNameException {
         Model model = head.next;
         while (!model.equals(head)) {
-            if (model.getName().equals(name)) throw new DuplicateModelNameException();
+            if (model.getName().equals(name)) {
+                throw new DuplicateModelNameException(name);
+            }
             model = model.next;
         }
     }

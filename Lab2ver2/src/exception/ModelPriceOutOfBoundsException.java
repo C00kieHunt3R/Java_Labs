@@ -1,7 +1,7 @@
 package exception;
 
 public class ModelPriceOutOfBoundsException extends RuntimeException{
-    public ModelPriceOutOfBoundsException() {
-        super("Цена на модель не может быть меньше 0.");
+    public ModelPriceOutOfBoundsException(double price) {
+        super(String.format("Указанная цена \"%.f\" является недопустимой (цена не может быть отрицательной).", price ));
     }
 }

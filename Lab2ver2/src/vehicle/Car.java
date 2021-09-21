@@ -54,25 +54,32 @@ public class Car implements Vehicle {
 
     public void setModelName(String prevName, String newName) throws NoSuchModelNameException, DuplicateModelNameException {
         Model model = getModel(prevName);
-        if (prevName.equals(newName)) {// ошибка на повторяющееся имя
+        if (Arrays.asList(getModelsNames()).contains(newName)) {
+            throw new DuplicateModelNameException(newName);
+        } else {
             model.setName(newName);
-        } else throw new DuplicateModelNameException();
+        }
     }
 
     public void setModelPrice(String name, double price) throws NoSuchModelNameException {
-        if (price > 0) {
-            Model model = getModel(name);
-            model.setPrice(price);
-        } else throw new ModelPriceOutOfBoundsException();
+        if (price < 0) {
+            throw new ModelPriceOutOfBoundsException(price);
+        }
+        Model model = getModel(name);
+        model.setPrice(price);
     }
 
     public double getModelPrice(String name) throws NoSuchModelNameException {
         return getModel(name).getPrice();
     }
 
-    public void addModel(String name, double price) throws DuplicateModelNameException { //СДЕЛАТЬ ТОЖЕ САМОЕ ДЛЯ MOTORCYCLE
-        if (price < 0) throw new ModelPriceOutOfBoundsException();
-        if (Arrays.asList(getModelsNames()).contains(name)) throw new DuplicateModelNameException();
+    public void addModel(String name, double price) throws DuplicateModelNameException {
+        if (price < 0) {
+            throw new ModelPriceOutOfBoundsException(price);
+        }
+        if (Arrays.asList(getModelsNames()).contains(name)) {
+            throw new DuplicateModelNameException(name);
+        }
         models = Arrays.copyOf(models, countOfModels + 1);
         models[countOfModels] = new Model(name, price);
         countOfModels++;
@@ -91,17 +98,33 @@ public class Car implements Vehicle {
                 return model;
             }
         }
-        throw new NoSuchModelNameException();
+        throw new NoSuchModelNameException(name);
     }
 
 
     private int getIndexOfModel(String name) throws NoSuchModelNameException {
         List<String> names = Arrays.asList(getModelsNames());
         if (!names.contains(name)) {
-            throw new NoSuchModelNameException();
+            throw new NoSuchModelNameException(name);
         }
         return names.indexOf(name);
     }
+
+    private void checkForExistingName(String name) {
+    }
+
+    private void checkForDuplicateName(String name) throws DuplicateModelNameException {
+        if (Arrays.asList(getModelsNames()).contains(name)) {
+            throw new DuplicateModelNameException(name);
+        }
+    }
+
+    private void checkForCorrectPrice(double price) {
+        if (price < 0) {
+            throw new ModelPriceOutOfBoundsException(price);
+        }
+    }
+
 
     @Override
     public String toString() {
