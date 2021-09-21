@@ -14,7 +14,8 @@ public class Main {
             System.out.println(s);
         }
 
-        kia.setModelName("Ceed", "5213" );
+
+        kia.addModel("K900", 11111.1);
 
         Motorcycle suzuki = new Motorcycle("SUZUKI", 5);
         suzuki.addModel("GSX750", 1500.0);
