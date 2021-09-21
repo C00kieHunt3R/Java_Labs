@@ -1,7 +1,7 @@
 package exception;
 
 public class DuplicateModelNameException extends Throwable {
-    public DuplicateModelNameException(String name) {
-        super(String.format("Модель с именем \"%s\" уже существует.", name));
+    public DuplicateModelNameException(String brand, String name) {
+        super(String.format("[%s | %s]: Модель с именем \"%2$s\" уже существует.", brand, name));
     }
 }

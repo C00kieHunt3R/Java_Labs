@@ -68,7 +68,7 @@ public class Motorcycle implements Vehicle {
     }
 
     public void setModelPrice(String name, double price) throws NoSuchModelNameException {
-        checkForCorrectPrice(price);
+        checkForCorrectPrice(name, price);
         getModel(name).setPrice(price);
     }
 
@@ -78,12 +78,14 @@ public class Motorcycle implements Vehicle {
 
     public void addModel(String name, double price) throws DuplicateModelNameException {
         checkForDuplicateModelName(name);
-        checkForCorrectPrice(price);
+        checkForCorrectPrice(name, price);
         addModelToList(new Model(name, price));
+        countOfModels++;
     }
 
     public void deleteModel(String name) throws NoSuchModelNameException {
         removeModelFromList(getModel(name));
+        countOfModels--;
     }
 
     private void addModelToList(Model model) {
@@ -109,7 +111,7 @@ public class Motorcycle implements Vehicle {
 
     private void checkForExistingModelName(String name) throws NoSuchModelNameException {
         if (!Arrays.asList(getModelsNames()).contains(name)) {
-            throw new NoSuchModelNameException(name);
+            throw new NoSuchModelNameException(this.brand, name);
         }
     }
 
@@ -117,19 +119,17 @@ public class Motorcycle implements Vehicle {
         Model model = head.next;
         while (!model.equals(head)) {
             if (model.getName().equals(name)) {
-                throw new DuplicateModelNameException(name);
+                throw new DuplicateModelNameException(this.brand, name);
             }
             model = model.next;
         }
     }
 
-    private void checkForCorrectPrice(double price) {
+    private void checkForCorrectPrice(String name, double price) {
         if (price < 0) {
-            throw new ModelPriceOutOfBoundsException(price);
+            throw new ModelPriceOutOfBoundsException(this.brand, name, price);
         }
     }
-
-
 
     @Override
     public String toString() {

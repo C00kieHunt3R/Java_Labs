@@ -15,7 +15,7 @@ public class Car implements Vehicle {
         this.countOfModels = countOfModels;
         models = new Model[countOfModels];
         for (int i = 0; i < countOfModels; i++) {
-            models[i] = new Model("car" + i, 1000.0);
+            models[i] = new Model("car" + i, 1000000.0);
         }
     }
 
@@ -53,14 +53,12 @@ public class Car implements Vehicle {
 
     public void setModelName(String prevName, String newName) throws NoSuchModelNameException, DuplicateModelNameException {
         checkForDuplicateModelName(newName);
-        Model model = getModel(prevName);
-        model.setName(newName);
+        getModel(prevName).setName(newName);
     }
 
     public void setModelPrice(String name, double price) throws NoSuchModelNameException {
-        checkForCorrectPrice(price);
-        Model model = getModel(name);
-        model.setPrice(price);
+        checkForCorrectPrice(name, price);
+        getModel(name).setPrice(price);
     }
 
     public double getModelPrice(String name) throws NoSuchModelNameException {
@@ -68,7 +66,7 @@ public class Car implements Vehicle {
     }
 
     public void addModel(String name, double price) throws DuplicateModelNameException {
-        checkForCorrectPrice(price);
+        checkForCorrectPrice(name, price);
         checkForDuplicateModelName(name);
         models = Arrays.copyOf(models, countOfModels + 1);
         models[countOfModels] = new Model(name, price);
@@ -76,7 +74,7 @@ public class Car implements Vehicle {
     }
 
     public void deleteModel(String name) throws NoSuchModelNameException {
-        checkForExistingModel(name);
+        checkForExistingModelName(name);
         int index = getIndexOfModel(name);
         System.arraycopy(models, index + 1, models, index, models.length - index - 1);
         models = Arrays.copyOf(models, models.length - 1);
@@ -84,7 +82,7 @@ public class Car implements Vehicle {
     }
 
     private Model getModel(String name) throws NoSuchModelNameException {
-        checkForExistingModel(name);
+        checkForExistingModelName(name);
         return models[getIndexOfModel(name)];
     }
 
@@ -92,21 +90,21 @@ public class Car implements Vehicle {
         return Arrays.asList(getModelsNames()).indexOf(name);
     }
 
-    private void checkForExistingModel(String name) throws NoSuchModelNameException {
+    private void checkForExistingModelName(String name) throws NoSuchModelNameException {
         if (!Arrays.asList(getModelsNames()).contains(name)) {
-            throw new NoSuchModelNameException(name);
+            throw new NoSuchModelNameException(this.brand, name);
         }
     }
 
     private void checkForDuplicateModelName(String name) throws DuplicateModelNameException {
         if (Arrays.asList(getModelsNames()).contains(name)) {
-            throw new DuplicateModelNameException(name);
+            throw new DuplicateModelNameException(this.brand, name);
         }
     }
 
-    private void checkForCorrectPrice(double price) {
+    private void checkForCorrectPrice(String name, double price) {
         if (price < 0) {
-            throw new ModelPriceOutOfBoundsException(price);
+            throw new ModelPriceOutOfBoundsException(this.brand, name, price);
         }
     }
 
