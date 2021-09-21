@@ -1,8 +1,6 @@
-import exception.DuplicateModelNameException;
-import exception.NoSuchModelNameException;
-import tool.VehicleHandler;
-import vehicle.Car;
-import vehicle.Motorcycle;
+import exception.*;
+import tool.*;
+import vehicle.*;
 
 public class Main {
 
