@@ -2,6 +2,8 @@ package vehicle;
 
 import exception.*;
 
+import java.util.Arrays;
+
 public class Motorcycle implements Vehicle {
 
     private String brand;
@@ -60,12 +62,13 @@ public class Motorcycle implements Vehicle {
         return prices;
     }
 
-    public void setModelName(String prevName, String newName) throws NoSuchModelNameException, DuplicateModelNameException {//добавить поле name!!!!!!!!!!!!!!!!
-        checkForDuplicateName(newName);
+    public void setModelName(String prevName, String newName) throws NoSuchModelNameException, DuplicateModelNameException {
+        checkForDuplicateModelName(newName);
         getModel(prevName).setName(newName);
     }
 
     public void setModelPrice(String name, double price) throws NoSuchModelNameException {
+        checkForCorrectPrice(price);
         getModel(name).setPrice(price);
     }
 
@@ -74,7 +77,8 @@ public class Motorcycle implements Vehicle {
     }
 
     public void addModel(String name, double price) throws DuplicateModelNameException {
-        checkForDuplicateName(name);
+        checkForDuplicateModelName(name);
+        checkForCorrectPrice(price);
         addModelToList(new Model(name, price));
     }
 
@@ -95,19 +99,21 @@ public class Motorcycle implements Vehicle {
     }
 
     private Model getModel(String name) throws NoSuchModelNameException {
+        checkForExistingModelName(name);
         Model model = head.next;
-        if (countOfModels != 0) {
-            while (!model.name.equals(name)) {
-                model = model.next;
-                if (model.equals(head)) {
-                    throw new NoSuchModelNameException(name);
-                }
-            }
-        } else throw new NoSuchModelNameException(name);
+        while (!model.name.equals(name)) {
+            model = model.next;
+        }
         return model;
     }
 
-    private void checkForDuplicateName(String name) throws DuplicateModelNameException {
+    private void checkForExistingModelName(String name) throws NoSuchModelNameException {
+        if (!Arrays.asList(getModelsNames()).contains(name)) {
+            throw new NoSuchModelNameException(name);
+        }
+    }
+
+    private void checkForDuplicateModelName(String name) throws DuplicateModelNameException {
         Model model = head.next;
         while (!model.equals(head)) {
             if (model.getName().equals(name)) {
@@ -116,6 +122,14 @@ public class Motorcycle implements Vehicle {
             model = model.next;
         }
     }
+
+    private void checkForCorrectPrice(double price) {
+        if (price < 0) {
+            throw new ModelPriceOutOfBoundsException(price);
+        }
+    }
+
+
 
     @Override
     public String toString() {
