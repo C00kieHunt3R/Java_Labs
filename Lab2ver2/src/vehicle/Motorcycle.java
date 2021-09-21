@@ -60,7 +60,7 @@ public class Motorcycle implements Vehicle {
         return prices;
     }
 
-    public void setModelName(String prevName, String newName) throws NoSuchModelNameException, DuplicateModelNameException {
+    public void setModelName(String prevName, String newName) throws NoSuchModelNameException, DuplicateModelNameException {//добавить поле name!!!!!!!!!!!!!!!!
         checkForDuplicateName(newName);
         getModel(prevName).setName(newName);
     }

@@ -54,7 +54,7 @@ public class Car implements Vehicle {
 
     public void setModelName(String prevName, String newName) throws NoSuchModelNameException, DuplicateModelNameException {
         Model model = getModel(prevName);
-        if (prevName.equals(newName)) {
+        if (prevName.equals(newName)) {// ошибка на повторяющееся имя
             model.setName(newName);
         } else throw new DuplicateModelNameException();
     }
