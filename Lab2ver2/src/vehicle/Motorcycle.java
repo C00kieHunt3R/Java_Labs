@@ -26,9 +26,6 @@ public class Motorcycle implements Vehicle {
         return countOfModels;
     }
 
-    public void setCountOfModels(int countOfModels) {
-        this.countOfModels = countOfModels;
-    }
 
     public Motorcycle(String brand, int countOfModels) {
         this.brand = brand;

@@ -31,9 +31,7 @@ public class Car implements Vehicle {
         return countOfModels;
     }
 
-    public void setCountOfModels(int countOfModels) {
-        this.countOfModels = countOfModels;
-    }
+
 
     public String[] getModelsNames() {
         String[] names = new String[countOfModels];

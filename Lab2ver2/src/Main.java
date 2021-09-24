@@ -19,7 +19,7 @@ public class Main {
         //System.out.println(VehicleHandler.getAverage(bmw));
         //VehicleHandler.printModelsNames(bmw);
         //VehicleHandler.printModelsPrices(bmw);
-        //System.out.println(bmw);
+        System.out.println(bmw);
 
         Motorcycle yamaha = new Motorcycle("YAMAHA", 3);
 
@@ -35,7 +35,7 @@ public class Main {
         //System.out.println(VehicleHandler.getAverage(yamaha));
         //VehicleHandler.printModelsNames(yamaha);
         //VehicleHandler.printModelsPrices(yamaha);
-        //System.out.println(yamaha);
+        System.out.println(yamaha);
 
     }
 }

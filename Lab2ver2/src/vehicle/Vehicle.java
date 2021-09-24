@@ -18,5 +18,4 @@ public interface Vehicle {
     void deleteModel(String name) throws NoSuchModelNameException;
 
     int getCountOfModels();
-    void setCountOfModels(int countOfModels);
 }
