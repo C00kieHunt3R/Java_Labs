@@ -2,9 +2,10 @@ package vehicle;
 
 import exception.*;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class Motorcycle implements Vehicle {
+public class Motorcycle implements Vehicle, Serializable {
 
     private String brand;
     private int countOfModels;
@@ -141,7 +142,7 @@ public class Motorcycle implements Vehicle {
     }
 
 
-    private class Model {
+    private class Model implements Serializable {
 
         private String name;
         private double price;

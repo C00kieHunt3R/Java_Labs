@@ -2,9 +2,10 @@ package vehicle;
 
 import exception.*;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class Car implements Vehicle {
+public class Car implements Vehicle, Serializable {
 
     private String brand;
     private int countOfModels;
@@ -30,7 +31,6 @@ public class Car implements Vehicle {
     public int getCountOfModels() {
         return countOfModels;
     }
-
 
 
     public String[] getModelsNames() {
@@ -116,7 +116,7 @@ public class Car implements Vehicle {
         return stringBuilder.toString();
     }
 
-    private class Model {
+    private class Model implements Serializable {
         private String name;
         private double price;
 
