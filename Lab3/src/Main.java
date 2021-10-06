@@ -9,11 +9,11 @@ public class Main {
 
     public static void main(String[] args) throws DuplicateModelNameException, NoSuchModelNameException, IOException, ClassNotFoundException {
 
-        Vehicle currentMoto = new Motorcycle("YAMAHA", 3);
-        currentMoto.addModel("YAM101", 2500000);
-        currentMoto.addModel("WST555", 5000000);
-        System.out.println("ИСХОДНЫЕ ДАННЫЕ:");
-        System.out.println(currentMoto);
+        Vehicle moto1 = new Motorcycle("YAMAHA", 3);
+        moto1.addModel("YAM101", 2500000);
+        moto1.addModel("WST555", 5000000);
+        System.out.println("Initial data:");
+        System.out.println(moto1);
 
         /*БАЙТОВЫЙ ПОТОК*/
         System.out.println("\n---------------\n[БАЙТОВЫЙ ПОТОК / ЗАПИСЬ В ФАЙЛ]\n--------------");
@@ -23,7 +23,7 @@ public class Main {
 
         //ЗАПИСЬ
         FileOutputStream fileOut1 = new FileOutputStream(filename);
-        VehicleHandler.outputVehicle(currentMoto, fileOut1);
+        VehicleHandler.outputVehicle(moto1, fileOut1);
         fileOut1.close();
 
         //ЧТЕНИЕ
@@ -46,7 +46,7 @@ public class Main {
         System.out.println(" ВВЕДИТЕ НАЗВАНИЕ ФАЙЛА: ");
         filename = scanner.nextLine();
         ObjectOutputStream fileOut2 = new ObjectOutputStream(new FileOutputStream(filename));
-        fileOut2.writeObject(currentMoto);
+        fileOut2.writeObject(moto1);
         fileOut2.close();
 
         System.out.println("\n---------------\n[БАЙТОВЫЙ ПОТОК / ПРОВЕРКА СЕРИАЛИЗАЦИИ / ЧТЕНИЕ ИЗ ФАЙЛА]\n--------------");
@@ -71,7 +71,7 @@ public class Main {
         System.out.println(" ВВЕДИТЕ НАЗВАНИЕ ФАЙЛА: ");
         filename = scanner.nextLine();
         FileWriter fileOut3 = new FileWriter(filename);
-        VehicleHandler.writeVehicle(currentMoto, fileOut3);
+        VehicleHandler.writeVehicle(moto1, fileOut3);
         fileOut3.close();
 
         //ЧТЕНИЕ
@@ -98,4 +98,51 @@ public class Main {
         VehicleHandler.writeVehicle(autoAfter3, new OutputStreamWriter(System.out));
 
     }
+
+    private static void byteStreamCreateFile(Vehicle vehicle, String fileName) throws IOException {
+        FileOutputStream out = new FileOutputStream(fileName);
+        VehicleHandler.outputVehicle(vehicle, out);
+        out.close();
+    }
+
+    private static Vehicle byteStreamReadFile(String fileName) throws IOException, DuplicateModelNameException {
+        FileInputStream in = new FileInputStream(fileName);
+        Vehicle vehicle = VehicleHandler.inputVehicleMoto(in);
+        in.close();
+        return vehicle;
+    }
+
+    private static void objSerializeWrite(Vehicle vehicle, String fileName) throws IOException {
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName));
+        out.writeObject(vehicle);
+        out.close();
+    }
+
+    private static Vehicle objSerializeRead(String fileName) throws IOException, ClassNotFoundException {
+        FileInputStream in = new FileInputStream(fileName);
+        ObjectInputStream ois = new ObjectInputStream(in);
+        Vehicle vehicle = (Motorcycle) ois.readObject();
+        in.close();
+        return vehicle;
+    }
+
+    private static void charStreamCreateFile(Vehicle vehicle, String fileName) throws IOException {
+        FileWriter out = new FileWriter(fileName);
+        VehicleHandler.writeVehicle(vehicle, out);
+        out.close();
+    }
+
+    private static Vehicle charStreamReadFile(String fileName) throws IOException, DuplicateModelNameException, NoSuchModelNameException {
+        FileReader in = new FileReader(fileName);
+        Vehicle vehicle = VehicleHandler.readVehicleMoto(in);
+        in.close();
+
+        return vehicle;
+    }
+
+    private static void charStreamWriteManually() throws DuplicateModelNameException, IOException, NoSuchModelNameException {
+        Vehicle vehicle = VehicleHandler.readVehicleMoto(new InputStreamReader(System.in));
+        VehicleHandler.writeVehicle(vehicle, new OutputStreamWriter(System.out));
+    }
+
 }
