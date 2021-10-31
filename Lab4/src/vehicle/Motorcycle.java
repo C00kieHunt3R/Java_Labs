@@ -5,11 +5,12 @@ import exception.*;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public class Motorcycle implements Vehicle {
+public class Motorcycle implements Vehicle, Cloneable {
 
     private String brand;
     private int countOfModels;
     private Model head = new Model();
+
     {
         head.prev = head;
         head.next = head;
@@ -53,8 +54,8 @@ public class Motorcycle implements Vehicle {
         return names;
     }
 
-    public Double[] getModelsPrices() {
-        Double[] prices = new Double[countOfModels];
+    public double[] getModelsPrices() {
+        double[] prices = new double[countOfModels];
         Model model = head.next;
         int index = 0;
         while (!model.equals(head)) {
@@ -129,25 +130,98 @@ public class Motorcycle implements Vehicle {
     }
 
     private void checkForCorrectPrice(String name, double price) {
+
         if (price < 0) {
+
             throw new ModelPriceOutOfBoundsException(this.brand, name, price);
         }
     }
 
     @Override
+    public int hashCode() {
+
+        int prime = 31;
+        int result = 1;
+
+        result = result * prime + brand.hashCode();
+        result = result * prime + Arrays.hashCode(getModelsNames());
+        result = result * prime + Arrays.hashCode(getModelsPrices());
+
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj) {
+            return true;
+
+
+        } else if (obj instanceof Motorcycle) {
+
+            Motorcycle motorcycle = (Motorcycle) obj;
+
+            String[] thisModels = this.getModelsNames();
+            double[] thisPrices = this.getModelsPrices();
+            String[] objModels = motorcycle.getModelsNames();
+            double[] objPrices = motorcycle.getModelsPrices();
+
+            if (!motorcycle.getBrand().equals(this.brand)) {
+                return false;
+
+            } else if (motorcycle.getCountOfModels() != this.countOfModels) {
+                return false;
+
+            } else for (int i = 0; i < countOfModels; i++) {
+
+                if (!objModels[i].equals(thisModels[i]) ||
+                        objPrices[i] != thisPrices[i]) {
+
+                    return false;
+                }
+            }
+            return true;
+
+        } else return false;
+
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Motorcycle moto = (Motorcycle) super.clone();
+        moto.head = new Model();
+        moto.head.prev = moto.head;
+        moto.head.next = moto.head;
+        Model model = this.head.next;
+        while (model != head) {
+            Model clone = (Model) model.clone();
+            clone.next = moto.head;
+            clone.prev = moto.head.prev;
+            moto.head.prev.next = clone;
+            moto.head.prev = clone;
+            model = model.next;
+        }
+        return moto;
+    }
+
+    @Override
     public String toString() {
+
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Brand: ").append(brand).append("\n");
         Model model = head.next;
+
         while (!model.equals(head)) {
+
             stringBuilder.append("\t").append(model.getName()).append(" | ").append(model.getPrice()).append("\n");
             model = model.next;
         }
+
         return stringBuilder.toString();
     }
 
 
-    private class Model implements Serializable {
+    private class Model implements Serializable, Cloneable {
 
         private String name;
         private double price;
@@ -170,11 +244,17 @@ public class Motorcycle implements Vehicle {
             this.price = price;
         }
 
-        public Model() {}
+        public Model() {
+        }
 
         public Model(String name, double price) {
             this.name = name;
             this.price = price;
+        }
+
+        @Override
+        protected Object clone() throws CloneNotSupportedException {
+            return super.clone();
         }
     }
 }

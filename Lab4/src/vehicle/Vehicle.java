@@ -9,7 +9,7 @@ public interface Vehicle extends Serializable {
     void setBrand(String brand);
 
     String[] getModelsNames();
-    Double[] getModelsPrices();
+    double[] getModelsPrices();
 
     void setModelName(String prevName, String newName) throws NoSuchModelNameException, DuplicateModelNameException;
     void setModelPrice(String name, double price) throws NoSuchModelNameException;

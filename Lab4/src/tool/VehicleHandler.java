@@ -55,60 +55,54 @@ public class VehicleHandler {
 
     }
 
-    public static Vehicle inputVehicleCar(InputStream in) throws IOException, DuplicateModelNameException {
+    public static Vehicle inputVehicle(InputStream in, Type type) throws IOException, DuplicateModelNameException {
 
         DataInputStream stream = new DataInputStream(in);
-
         int countOfModels = stream.readInt();
         byte[] data = readStreamData(stream, countOfModels);
-
         String brand = new String(data);
         countOfModels = stream.readInt();
+        Vehicle vehicle;
 
-        Vehicle vehicle = new Car(brand);
-        String name;
-        double price;
-        int length;
+        if (type == Type.CAR) {
 
-        for (int i = 0; i < countOfModels; i++) {
-            length = stream.readInt();
-            data = readStreamData(stream, length);
+            vehicle = new Car(brand);
+            String name;
+            double price;
+            int length;
 
-            name = new String(data);
-            price = stream.readDouble();
-            vehicle.addModel(name, price);
+            for (int i = 0; i < countOfModels; i++) {
+                length = stream.readInt();
+                data = readStreamData(stream, length);
+
+                name = new String(data);
+                price = stream.readDouble();
+                vehicle.addModel(name, price);
+            }
+
+        } else {
+
+            vehicle = new Motorcycle(brand);
+            String name;
+            double price;
+            int length;
+
+            for (int i = 0; i < countOfModels; i++) {
+                length = stream.readInt();
+                data = readStreamData(stream, length);
+
+                name = new String(data);
+                price = stream.readDouble();
+                vehicle.addModel(name, price);
+            }
         }
         stream.close();
         return vehicle;
     }
 
-    public static Vehicle inputVehicleMoto(InputStream in) throws IOException, DuplicateModelNameException {
 
-        DataInputStream stream = new DataInputStream(in);
 
-        int countOfModels = stream.readInt();
-        byte[] data = readStreamData(stream, countOfModels);
-
-        String brand = new String(data);
-        countOfModels = stream.readInt();
-        Vehicle vehicle = new Motorcycle(brand);
-        String name;
-        double price;
-        int length;
-
-        for (int i = 0; i < countOfModels; i++) {
-            length = stream.readInt();
-            data = readStreamData(stream, length);
-
-            name = new String(data);
-            price = stream.readDouble();
-            vehicle.addModel(name, price);
-        }
-        stream.close();
-        return vehicle;
-    }
-
-    public static void writeVehicle(Vehicle vehicle, Writer out)  {
+    public static void writeVehicle(Vehicle vehicle, Writer out) {
 
         PrintWriter stream = new PrintWriter(out);
 
@@ -119,47 +113,43 @@ public class VehicleHandler {
         for (int i = 0; i < len; i++) {
             stream.println(vehicle.getModelsNames()[i]);
             stream.println(vehicle.getModelsPrices()[i]);
-        }        stream.flush();
+        }
+        stream.flush();
     }
 
-
-
-    public static Vehicle readVehicleCar(Reader in) throws IOException, DuplicateModelNameException {
+    public static Vehicle readVehicle(Reader in, Type type) throws IOException, DuplicateModelNameException {
 
         BufferedReader stream = new BufferedReader(in);
-
         String mark = stream.readLine();
-        double price;
-        String name;
-        int countOfModels = Integer.parseInt(stream.readLine());
-        Vehicle vehicle = new Car(mark);
+        if (type == Type.CAR) {
 
-        for (int i = 0; i < countOfModels; i++) {
-            name = stream.readLine();
-            price = Double.parseDouble(stream.readLine());
-            vehicle.addModel(name, price);
+            double price;
+            String name;
+            int countOfModels = Integer.parseInt(stream.readLine());
+            Vehicle vehicle = new Car(mark);
+
+            for (int i = 0; i < countOfModels; i++) {
+                name = stream.readLine();
+                price = Double.parseDouble(stream.readLine());
+                vehicle.addModel(name, price);
+            }
+            stream.close();
+            return vehicle;
+        } else {
+
+            double price;
+            int countOfModels = Integer.parseInt(stream.readLine());
+            Vehicle vehicle = new Motorcycle(mark);
+            String name;
+
+            for (int i = 0; i < countOfModels; i++) {
+                name = stream.readLine();
+                price = Double.parseDouble(stream.readLine());
+                vehicle.addModel(name, price);
+            }
+            stream.close();
+            return vehicle;
         }
-        stream.close();
-        return vehicle;
-    }
-
-    public static Vehicle readVehicleMoto(Reader in) throws IOException, DuplicateModelNameException {
-
-        BufferedReader stream = new BufferedReader(in);
-        
-        String mark = stream.readLine();
-        double price;
-        int countOfModels = Integer.parseInt(stream.readLine());
-        Vehicle vehicle = new Motorcycle(mark);
-        String name;
-
-        for (int i = 0; i < countOfModels; i++) {
-            name = stream.readLine();
-            price = Double.parseDouble(stream.readLine());
-            vehicle.addModel(name, price);
-        }
-        stream.close();
-        return vehicle;
     }
 
 
@@ -185,5 +175,9 @@ public class VehicleHandler {
         return data;
     }
 
+    public enum Type {
+        CAR,
+        MOTORCYCLE
+    }
 
 }

@@ -5,7 +5,7 @@ import exception.*;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public class Car implements Vehicle {
+public class Car implements Vehicle, Serializable, Cloneable {
 
     private String brand;
     private int countOfModels;
@@ -47,8 +47,8 @@ public class Car implements Vehicle {
         return names;
     }
 
-    public Double[] getModelsPrices() {
-        Double[] prices = new Double[countOfModels];
+    public double[] getModelsPrices() {
+        double[] prices = new double[countOfModels];
         for (int i = 0; i < countOfModels; i++) {
             prices[i] = models[i].getPrice();
         }
@@ -70,6 +70,7 @@ public class Car implements Vehicle {
     }
 
     public void addModel(String name, double price) throws DuplicateModelNameException {
+
         checkForCorrectPrice(name, price);
         checkForDuplicateModelName(name);
         models = Arrays.copyOf(models, countOfModels + 1);
@@ -78,6 +79,7 @@ public class Car implements Vehicle {
     }
 
     public void deleteModel(String name) throws NoSuchModelNameException {
+
         checkForExistingModelName(name);
         int index = getIndexOfModel(name);
         System.arraycopy(models, index + 1, models, index, models.length - index - 1);
@@ -86,7 +88,9 @@ public class Car implements Vehicle {
     }
 
     private Model getModel(String name) throws NoSuchModelNameException {
+
         checkForExistingModelName(name);
+
         return models[getIndexOfModel(name)];
     }
 
@@ -95,34 +99,108 @@ public class Car implements Vehicle {
     }
 
     private void checkForExistingModelName(String name) throws NoSuchModelNameException {
+
         if (!Arrays.asList(getModelsNames()).contains(name)) {
+
             throw new NoSuchModelNameException(this.brand, name);
         }
     }
 
     private void checkForDuplicateModelName(String name) throws DuplicateModelNameException {
+
         if (Arrays.asList(getModelsNames()).contains(name)) {
+
             throw new DuplicateModelNameException(this.brand, name);
         }
     }
 
     private void checkForCorrectPrice(String name, double price) {
+
         if (price < 0) {
+
             throw new ModelPriceOutOfBoundsException(this.brand, name, price);
         }
     }
 
     @Override
+    public int hashCode() {
+
+        int prime = 31;
+        int result = 1;
+
+        result = result * prime + brand.hashCode();
+        result = result * prime + Arrays.hashCode(getModelsNames());
+        result = result * prime + Arrays.hashCode(getModelsPrices());
+
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+
+        if (this == obj) {
+            return true;
+
+        } else if (obj instanceof Car) {
+
+            Car car = (Car) obj;
+
+            if (!car.getBrand().equals(this.brand)) {
+                return false;
+
+            } else if (car.getCountOfModels() != this.countOfModels) {
+                return false;
+
+            } else for (int i = 0; i < models.length; i++) {
+
+                if (!car.models[i].getName().equals(this.models[i].name) ||
+                        car.models[i].getPrice() != this.models[i].getPrice()) {
+
+                    return false;
+                }
+            }
+            return true;
+
+        } else return false;
+
+    }
+
+    @Override
+    public Object clone() {
+
+        Car car = null;
+
+        try {
+
+            car = (Car) super.clone();
+            car.models = this.models.clone();
+            for (int i = 0; i < countOfModels; i++) {
+                car.models[i] = (Model) models[i].clone();
+            }
+        } catch (CloneNotSupportedException e) {
+
+            e.printStackTrace();
+        }
+        return car;
+    }
+
+    @Override
     public String toString() {
+
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Brand: ").append(brand).append("\n");
+
         for (Model model : models) {
+
             stringBuilder.append("\t").append(model.getName()).append(" | ").append(model.getPrice()).append("\n");
         }
+
         return stringBuilder.toString();
     }
 
-    private class Model implements Serializable {
+
+    private class Model implements Serializable, Cloneable {
         private String name;
         private double price;
 
@@ -145,6 +223,11 @@ public class Car implements Vehicle {
         public Model(String name, double price) {
             this.name = name;
             this.price = price;
+        }
+
+        @Override
+        protected Object clone() throws CloneNotSupportedException {
+            return super.clone();
         }
     }
 
