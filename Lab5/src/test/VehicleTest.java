@@ -20,18 +20,22 @@ public class VehicleTest {
     private static void addModelTest(Vehicle vehicle) throws DuplicateModelNameException {
 
         vehicle.addModel("modelTest", 500);
+        System.out.println(vehicle);
     }
 
     private static void deleteModelTest(Vehicle vehicle) throws NoSuchModelNameException {
 
         vehicle.deleteModel(vehicle.getModelsNames()[0]);
+        System.out.println(vehicle);
     }
 
     private static void setModelNameTest(Vehicle vehicle) throws DuplicateModelNameException, NoSuchModelNameException {
         vehicle.setModelName(vehicle.getModelsNames()[0], "NEW NAME");
+        System.out.println(vehicle);
     }
 
     private static void setModelPriceTest(Vehicle vehicle) throws NoSuchModelNameException {
         vehicle.setModelPrice(vehicle.getModelsNames()[0], 500);
+        System.out.println(vehicle);
     }
 }

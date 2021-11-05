@@ -18,7 +18,7 @@ public class Main {
         //Task4();
         //Task5();
         //Task6();
-        Task7();
+        //Task7();
     }
 
 
@@ -52,6 +52,7 @@ public class Main {
     private static void Task2() {
         Vehicle car = new Car("FERRARI", 5);
         Vehicle reflectedCar = VehicleHandler.createInstance("FERRARI MK.2", 5, car);
+        System.out.println(reflectedCar.getClass());
         VehicleTest.test(car);
         VehicleTest.test(reflectedCar);
     }
