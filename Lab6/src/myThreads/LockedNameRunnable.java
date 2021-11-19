@@ -1,4 +1,4 @@
-package worker;
+package myThreads;
 
 import vehicle.Vehicle;
 
@@ -23,6 +23,7 @@ public class LockedNameRunnable implements Runnable {
 
             String[] names = vehicle.getModelsNames();
             lock.lock();
+
 
             for (int i = 0; i < vehicle.getCountOfModels(); i++) {
 

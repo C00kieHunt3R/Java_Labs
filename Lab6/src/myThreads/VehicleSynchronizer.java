@@ -1,4 +1,4 @@
-package worker;
+package myThreads;
 
 import vehicle.Vehicle;
 
@@ -6,7 +6,7 @@ public class VehicleSynchronizer {
     private Vehicle vehicle;
     private volatile int current = 0;
     private Object lock = new Object();
-    private boolean set = false;
+    private boolean set = true;
 
     public VehicleSynchronizer(Vehicle vehicle) {
         this.vehicle = vehicle;
@@ -36,6 +36,7 @@ public class VehicleSynchronizer {
 
             String [] names = vehicle.getModelsNames();
             if (!canPrintName()) throw new InterruptedException();
+
             while (set)
                 lock.wait();
             System.out.println("Print model: " + names[current]);

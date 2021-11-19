@@ -1,19 +1,18 @@
-package worker;
+package myThreads;
 
-public class PriceRunnable implements Runnable {
+public class NameRunnable implements Runnable {
 
     private VehicleSynchronizer vehicle;
 
-
-    public PriceRunnable(VehicleSynchronizer vehicle) {
+    public NameRunnable(VehicleSynchronizer vehicle) {
         this.vehicle = vehicle;
     }
 
     @Override
     public void run() {
         try {
-            while (vehicle.canPrintPrice()) {
-                vehicle.printPrice();
+            while (vehicle.canPrintName()) {
+                vehicle.printName();
             }
         } catch (InterruptedException e) {
             System.out.println(e);

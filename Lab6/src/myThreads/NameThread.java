@@ -1,4 +1,4 @@
-package worker;
+package myThreads;
 
 import vehicle.Vehicle;
 

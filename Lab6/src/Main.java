@@ -1,22 +1,22 @@
 import exception.*;
 import tool.*;
 import vehicle.*;
-import worker.*;
+import myThreads.*;
 
 import java.io.*;
-import java.util.LinkedList;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
 
-    public static void main(String[] args) throws DuplicateModelNameException, NoSuchModelNameException, IOException, ClassNotFoundException, CloneNotSupportedException {
+    public static void main(String[] args) throws DuplicateModelNameException, NoSuchModelNameException, IOException, ClassNotFoundException, CloneNotSupportedException, InterruptedException {
         //Task1();
         //Task2();
         //Task3();
-        Task4();
+        //Task4();
+        Task5();
     }
 
     private static void Task1() {
@@ -24,8 +24,8 @@ public class Main {
         Car car = new Car("FERRARI", 1000);
         Thread thread1 = new NameThread(car);
         Thread thread2 = new PriceThread(car);
-        thread1.setPriority(1);
-        thread2.setPriority(10);
+        thread1.setPriority(Thread.MIN_PRIORITY);
+        thread2.setPriority(Thread.MAX_PRIORITY);
         thread1.start();
         thread2.start();
     }
@@ -48,10 +48,10 @@ public class Main {
         ReentrantLock lock = new ReentrantLock();
         Runnable names = new LockedNameRunnable(quadbike, lock);
         Runnable prices = new LockedPriceRunnable(quadbike, lock);
+
         Thread thread1 = new Thread(names);
         Thread thread2 = new Thread(prices);
-        thread1.setPriority(Thread.MIN_PRIORITY);
-        thread2.setPriority(Thread.MAX_PRIORITY);
+
         thread1.start();
         thread2.start();
     }
@@ -74,8 +74,22 @@ public class Main {
         executorService.shutdown();
     }
 
-    private static void Task5() {
+    private static void Task5() throws InterruptedException {
 
+        String[] fnames = {"file0", "file1", "file2", "file3", "file4"};
+
+        ArrayBlockingQueue<Vehicle> queue = new ArrayBlockingQueue<>(1);
+
+        for (String fname: fnames) {
+
+            FileRunnable fileRunnable = new FileRunnable(fname, queue);
+            Thread thread = new Thread(fileRunnable);
+            thread.start();
+        }
+
+        for (int i = 0; i < 5; i++) {
+            System.out.println(queue.take().getBrand());
+        }
 
     }
 
@@ -178,7 +192,7 @@ public class Main {
         System.out.println("Not equal car (invalid price): " + bmw.equals(notEqualBMW2));
 
         /* Проверка hashCode() */
-        Car car = (Car)bmw.clone();
+        Car car = (Car) bmw.clone();
         car.setModelName("X5", "X555");
         System.out.println(bmw);
         System.out.println(car);
@@ -215,7 +229,7 @@ public class Main {
         System.out.println("Not equal motorcycle (invalid price): " + yamaha.equals(notEqualYAMAHA2));
 
         /* Проверка hashCode() */
-        Motorcycle motorcycle = (Motorcycle)yamaha.clone();
+        Motorcycle motorcycle = (Motorcycle) yamaha.clone();
         motorcycle.setModelName("THR5", "WOW123456");
         System.out.println();
         System.out.println(yamaha);
